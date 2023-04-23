@@ -64,7 +64,7 @@ The arguments used work this way:
 - */ is a pattern that matches all directories in the current directory. The * is a wildcard that matches any character and the / specifies that only directories should be matched. 
 '''
 
-LAST_CONVERSATION_FILE = "last_conversation.json"
+LAST_CONVERSATION_FILE = os.path.join(os.path.expanduser("~"), ".dodo_last_conversation.json")
 
 def save_last_conversation(conversation):
     with open(LAST_CONVERSATION_FILE, "w") as f:
