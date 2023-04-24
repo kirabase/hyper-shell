@@ -1,15 +1,15 @@
-# Dodo 🦤 - Your Command Line Companion 
+# 🦤 Dodo - Your Command Line Companion 
 Dodo is a smart command-line tool that effortlessly generates and executes Bash commands for you, using natural language descriptions. It harnesses the power of OpenAI's GPT-3.5 to understand your requirements and provides you with the appropriate Bash command and explanation.
 
 You say: $ dodo "List all files containing the words 'Artificial Intelligence'"
 it replys: `grep -r -l "Artificial Intelligence" .`
 
 🌟 Features:
-- Conversational UI 💬 - Effortlessly generate complex commands from simple conversational requests, with multi-language support. 
-- Clear Explanations 📚 - Each command comes with a clear explanation, so you can validate the results and learn as you go. 
-- Refinement 🔄: Feel like you're having a conversation with your terminal as you refine and tweak commands to perfection. 
-- Support for Popular Tools 🛠️: Master complex commands for Git, Docker, Npm, and a wide range of popular command-line tools. 
-- Fun & Engaging 😄: Transform your command line experience into a more interactive, enjoyable, and productive endeavor! 
+- 💬 Conversational UI: Effortlessly generate complex commands from simple conversational requests, with multi-language support. 
+- 📚 Clear Explanations: Each command comes with a clear explanation, so you can validate the results and learn as you go. 
+- 🔄 Refinement: Feel like you're having a conversation with your terminal as you refine and tweak commands to perfection. 
+- 🛠️ Support for Popular Tools: Master complex commands for Git, Docker, Npm, and a wide range of popular command-line tools. 
+- 😄 Fun & Engaging: Transform your command line experience into a more interactive, enjoyable, and productive endeavor! 
 
 ## Installation
 ---
@@ -31,13 +31,26 @@ Dodo uses GPT3.5, which will cost you a few cents a day. Monitor your API usage 
 
 3 - Set up your OpenAI API key: 
 
-Create a config.ini file in the project directory with the following content, replacing YOUR_OPENAI_API_KEY with your actual OpenAI API key:
+If you want to try dodo just run it, the first time it will ask you for the key; if you don't want to do it at each session, dodo supports multiple ways to set the key:
+
+Option 1: Set the OPENAI_API_KEY environment variable with your OpenAI API key:
+
+Add the following line at the end of your shell configuration file (.bashrc, .zshrc, or .bash_profile), replacing YOUR_OPENAI_API_KEY with your actual OpenAI API key:
+
+```
+export OPENAI_API_KEY=YOUR_OPENAI_API_KEY
+```
+
+After adding the line, restart your terminal or run source ~/.bashrc (or your shell config file), depending on the file you edited. The environment variable will now be available each time you open a new terminal session.
+
+
+Option 2: Create a config.ini file in the project directory with the following content, replacing YOUR_OPENAI_API_KEY with your actual OpenAI API key:
+
 ```
 [openai]
 api_key = YOUR_OPENAI_API_KEY
 ```
 
-In alternative you can set the API Key to the OPENAI_API_KEY env variable
 
 ## Usage
 ---
