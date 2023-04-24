@@ -12,7 +12,7 @@ it replys: `grep -r -l "Artificial Intelligence" .`
 - 😄 Fun & Engaging: Transform your command line experience into a more interactive, enjoyable, and productive endeavor! 
 
 ## Installation
----
+
 1 - Clone the repository, change to the project directory, and install the required dependencies: 
 ```
 git clone https://github.com/mgall/dodo-command-generator.git && \ 
@@ -53,7 +53,7 @@ api_key = YOUR_OPENAI_API_KEY
 
 
 ## Usage
----
+
 ```
 python3 dodo.py "A verbal description of the command you'd like to run"
 ```
@@ -65,7 +65,7 @@ Replace your prompt with a natural language description of the task you want to 
 - -c, --continue: Refine the command using the conversational feature of ChatGPT.
 
 ## Examples
----
+
 ### Example 1: Working with simple commands 
 
 A simple use case is to write what you want to achive if you don't remember the command;
@@ -147,7 +147,7 @@ want to install the latest version of the React package.
 ```
 
 ## Disclaimer
----
+
 This tool relies on OpenAI's GPT-3.5 Turbo model to generate bash commands from natural language descriptions. Please consider the following points when using this tool:
 - The generated code might not always be accurate or run as intended. Always review the suggested commands before executing them, especially if they involve system-level operations or sensitive data.
 - The natural language descriptions used to generate or refine commands are sent to OpenAI's servers. By using this tool, you acknowledge that your input data will be processed by OpenAI's API. Please refer to OpenAI's data usage policy for more information about data privacy and retention.
