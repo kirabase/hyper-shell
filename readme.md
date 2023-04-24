@@ -1,15 +1,26 @@
-# 🦤 Dodo - Your Command Line Companion 
+# Dodo 🦤 - Your Command Line Companion 
 Dodo is a smart command-line tool that effortlessly generates and executes Bash commands for you, using natural language descriptions. It harnesses the power of OpenAI's GPT-3.5 to understand your requirements and provides you with the appropriate Bash command and explanation.
 
-You say: $ dodo "List all files containing the words 'Artificial Intelligence'"
-it replys: `grep -r -l "Artificial Intelligence" .`
+You say: `$ dodo "List all files containing the words 'Artificial Intelligence'"`
+
+It replys: 
+```
+grep -l 'Artificial Intelligence' *
+
+This command will search for the phrase 'Artificial Intelligence' in all files in the current directory and its subdirectories, and output the names of the files that contain the phrase. 
+The arguments used work this way:
+- grep is a command-line utility for searching plain-text data sets for lines that match a regular expression.            
+- -l option tells grep to print only the names of files that contain the search term, instead of the actual lines that match the term.
+-  'Artificial Intelligence' is the search term that grep will look for.                   
+- * specifies that grep should search in all files in the current directory and its subdirectories.
+```
 
 🌟 Features:
-- 💬 Conversational UI: Effortlessly generate complex commands from simple conversational requests, with multi-language support. 
-- 📚 Clear Explanations: Each command comes with a clear explanation, so you can validate the results and learn as you go. 
-- 🔄 Refinement: Feel like you're having a conversation with your terminal as you refine and tweak commands to perfection. 
-- 🛠️ Support for Popular Tools: Master complex commands for Git, Docker, Npm, and a wide range of popular command-line tools. 
-- 😄 Fun & Engaging: Transform your command line experience into a more interactive, enjoyable, and productive endeavor! 
+- 💬 *Conversational UI*: Effortlessly generate complex commands from simple conversational requests, with multi-language support. 
+- 📚 *Clear Explanations*: Each command comes with a clear explanation, so you can validate the results and learn as you go. 
+- 🔄 *Refinement*: Feel like you're having a conversation with your terminal as you refine and tweak commands to perfection. 
+- 🛠️ *Support for Popular Tools*: Master complex commands for Git, Docker, Npm, and a wide range of popular command-line tools. 
+- 😄 *Fun & Engaging*: Transform your command line experience into a more interactive, enjoyable, and productive endeavor! 
 
 ## Installation
 
@@ -75,14 +86,14 @@ This command uses the grep command to search for the string "Artificial Intellig
 ## Usage
 
 ```
-python dodo.py "A verbal description of the command you'd like to run"
+dodo "A verbal description of the command you'd like to run"
 ```
 Replace your prompt with a natural language description of the task you want to perform.
 
 ### Command-line options
 - -s, --short: Show only the generated command, without the explanation.
-- -e, --execute: Execute the suggested command.
-- -c, --continue: Refine the command using the conversational feature of ChatGPT.
+- -e, --execute: Execute the suggested command, the last one suggested if no prompt is provided.
+- -c, --continue: Refine the command using a conversational flow.
 
 ## Examples
 
@@ -92,7 +103,7 @@ A simple use case is to write what you want to achive if you don't remember the 
 Here for example is a way to ask to list all the directory in the current location.
 
 ```
-$ python dodo.py "list all the directories"
+$ dodo "list all the directories"
 ls -d */
 
 Explanation:
@@ -109,7 +120,7 @@ You can then refine the command with the continue mode,
 just pretend to continue the conversation with the terminal.
 
 ```
-$ python dodo.py -c "only the hidden ones"
+$ dodo -c "only the hidden ones"
 ls -d .*/
 This command lists all the hidden directories in the current working directory. The arguments used work this way:                                                              
 
@@ -126,7 +137,7 @@ The AI service behind is really smart and is able to work with many different co
 here is an example where it uses variable and math to address your request.
 
 ```
-$ python dodo.py "generate a random number between 1 and 1000"
+$ dodo "generate a random number between 1 and 1000"
 echo $((RANDOM % 1000 + 1))
 
 Explanation:
@@ -146,7 +157,7 @@ and is able to generate complex commands from any popular command-line tool as w
 Here are a few examples:
 
 ```
-$ python dodo.py "git command to print the date of the last modification saved in the local repository"
+$ dodo "git command to print the date of the last modification saved in the local repository"
 git log -1 --format=%cd
 This command will print the date of the last commit made in the local repository.          
 
