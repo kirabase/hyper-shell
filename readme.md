@@ -1,19 +1,7 @@
 # Dodo 🦤 - Your Command Line Companion 
 Dodo is a smart command-line tool that effortlessly generates and executes Bash commands for you, using natural language descriptions. It harnesses the power of OpenAI's GPT-3.5 to understand your requirements and provides you with the appropriate Bash command and explanation.
 
-You say: `$ dodo "List all files containing the words 'Artificial Intelligence'"`
-
-It replys: 
-```
-grep -l 'Artificial Intelligence' *
-
-This command will search for the phrase 'Artificial Intelligence' in all files in the current directory and its subdirectories, and output the names of the files that contain the phrase. 
-The arguments used work this way:
-- grep is a command-line utility for searching plain-text data sets for lines that match a regular expression.            
-- -l option tells grep to print only the names of files that contain the search term, instead of the actual lines that match the term.
--  'Artificial Intelligence' is the search term that grep will look for.                   
-- * specifies that grep should search in all files in the current directory and its subdirectories.
-```
+![Dodo demo](assets/dodo-demo.gif)
 
 🌟 Features:
 - 💬 *Conversational UI*: Effortlessly generate complex commands from simple conversational requests, with multi-language support. 
