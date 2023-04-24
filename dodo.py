@@ -13,6 +13,10 @@ from rich.text import Text
 
 # Set up your OpenAI API key
 def get_openai_api_key()-> str:
+    # If not found in the configuration file, try to read it from the environment variable
+    if "OPENAI_API_KEY" in os.environ:
+        return os.environ["OPENAI_API_KEY"]
+    
     # Try to read the API key from the configuration file
     config_file = "config.ini"
     if os.path.exists(config_file):
@@ -21,10 +25,6 @@ def get_openai_api_key()-> str:
 
         if config.has_option("openai", "api_key"):
             return config.get("openai", "api_key")
-
-    # If not found in the configuration file, try to read it from the environment variable
-    if "OPENAI_API_KEY" in os.environ:
-        return os.environ["OPENAI_API_KEY"]
 
     # If not found in the environment variable, ask the user for the API key
     api_key = input("Please enter your OpenAI API key: ")
