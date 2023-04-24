@@ -33,7 +33,7 @@ Dodo uses GPT3.5, which will cost you a few cents a day. Monitor your API usage 
 
 If you want to try dodo just run it, the first time it will ask you for the key; if you don't want to do it at each session, dodo supports multiple ways to set the key:
 
-Option 1: Set the OPENAI_API_KEY environment variable with your OpenAI API key:
+*Option 1:* Set the OPENAI_API_KEY environment variable with your OpenAI API key:
 
 Add the following line at the end of your shell configuration file (.bashrc, .zshrc, or .bash_profile), replacing YOUR_OPENAI_API_KEY with your actual OpenAI API key:
 
@@ -44,18 +44,38 @@ export OPENAI_API_KEY=YOUR_OPENAI_API_KEY
 After adding the line, restart your terminal or run source ~/.bashrc (or your shell config file), depending on the file you edited. The environment variable will now be available each time you open a new terminal session.
 
 
-Option 2: Create a config.ini file in the project directory with the following content, replacing YOUR_OPENAI_API_KEY with your actual OpenAI API key:
+*Option 2:* Create a config.ini file in the project directory with the following content, replacing YOUR_OPENAI_API_KEY with your actual OpenAI API key:
 
 ```
 [openai]
 api_key = YOUR_OPENAI_API_KEY
 ```
 
+This works under Linux and Windows, adpat it if you use Windows or another OS.
+
+4 - Create an alias for quick access
+
+Dodo becomes even more useful when it's easily accessible right when you need to generate or launch a command. To make it more convenient to run, create an alias.
+
+To set up an alias, open your shell configuration file (.bashrc, .zshrc, or .bash_profile) and add the following line at the end, replacing /path/to/dodo-ai/dodo.py with the actual path to the project directory:
+
+```
+alias dodo="python /path/to/dodo-ai/dodo.py"
+```
+
+After adding the alias, restart your terminal or run source ~/.bashrc (or the appropriate shell config file).
+Now you can use the dodo command directly:
+```
+$ dodo "List the names of files containing the words 'Artificial Intelligence'"
+
+grep -l "Artificial Intelligence" *
+This command uses the grep command to search for the string "Artificial Intelligence" in all files in the current directory. The -l option tells grep to only print the names of the files containing the match.
+```
 
 ## Usage
 
 ```
-python3 dodo.py "A verbal description of the command you'd like to run"
+python dodo.py "A verbal description of the command you'd like to run"
 ```
 Replace your prompt with a natural language description of the task you want to perform.
 
