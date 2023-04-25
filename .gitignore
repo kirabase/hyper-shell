@@ -14,8 +14,8 @@ env/
 # Configuration files
 config.ini
 
-# Last conversation file
-last_conversation.json
+# Development environments
+.vscode/
 
 # Miscellaneous
 *.log

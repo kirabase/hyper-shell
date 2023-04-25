@@ -53,7 +53,6 @@ def get_api_key() -> str:
 openai.api_key = "" or get_api_key()
 
 BASH_ROLE = f'''You are a helpful assistant that translates human language descriptions to bash commands. Make sure to follow these guidelines:
-- Provide a command and its explanation in every reply, both in markdown format
 - Long explanations are presented in a bullet points format.
 - If a request doesn't make sense, still suggest a command and include guidance on how to fix it in the explanation.
 - Be capable of understanding and responding in multiple languages. Whenever the language of a request changes, change the language of your reply accordingly.
@@ -108,16 +107,20 @@ def execute_script(script: List[dict]) -> str:
 
 
 def parse_explanation(command_explanation) -> Tuple[str, str]:
-    pattern = r'(^|\n)\w+:'
-    sections = re.split(pattern, command_explanation)
+    # Structured explanation
+    sections = re.split(r'(^|\n)\w+:', command_explanation)
     sections = [s.strip() for s in sections if s.strip()]
-    if len(sections)!=2:
-        print(sections)
-        exit("Invalid reply")
-    bash_command = sections[0].replace('`',"").strip()
-    explanation = sections[1]
-
-    return bash_command, explanation
+    if len(sections)==2:
+        bash_command = sections[0].replace('`',"").strip()
+        explanation = sections[1]
+        return bash_command, explanation
+    
+    # Unstructured explanation
+    match = re.search(r'`([^`]+)`', command_explanation)
+    if match:
+        return match.group(1), command_explanation
+        
+    exit('AI is not the solution this time!')
 
 def main():
     parser = ArgumentParser(description="Generate, refine or execute bash commands from a natural language description.")
@@ -148,6 +151,7 @@ def main():
     else:
         command_text = Text(f"Unknown Command", style="red")
     console.print(command_text)
+    
     if not args.short:
         console.print(Markdown(explanation))
     
