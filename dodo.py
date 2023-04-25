@@ -90,14 +90,17 @@ def get_generation_script(role: str, prompt: str, continue_mode: bool=False):
     return conversation  
 
 def execute_script(script: List[dict]) -> str:
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=script,
-        max_tokens=300,
-        temperature=0.5,
-    )
-
-    response_text = response.choices[0].message['content'].strip()
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=script,
+            max_tokens=300,
+            temperature=0.5,
+        )
+    except openai.error.RateLimitError:
+        response_text = "Open AI service overloaded, try in a few minutes"
+    else:
+        response_text = response.choices[0].message['content'].strip()
     script.append({"role": "assistant", "content": response_text})
     return response_text 
 
