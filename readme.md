@@ -1,4 +1,4 @@
-# Dodo 🦤 - Your Command Line Companion 
+# Dodo 🦤 - Your Command Line AI Companion 🤖
 Dodo is a smart command-line tool that effortlessly generates and executes Bash commands for you, using natural language descriptions. It harnesses the power of OpenAI's GPT-3.5 to understand your requirements and provides you with the appropriate Bash command and explanation.
 
 ![Dodo demo](assets/dodo-demo.gif)
@@ -10,7 +10,7 @@ Dodo is a smart command-line tool that effortlessly generates and executes Bash 
 - 🛠️ *Support for Popular Tools*: Master complex commands for Git, Docker, Npm, and a wide range of popular command-line tools. 
 - 😄 *Fun & Engaging*: Transform your command line experience into a more interactive, enjoyable, and productive endeavor! 
 
-## Installation
+## Installation 📦
 
 1 - Clone the repository, change to the project directory, and install the required dependencies: 
 ```
@@ -71,7 +71,7 @@ grep -l "Artificial Intelligence" *
 This command uses the grep command to search for the string "Artificial Intelligence" in all files in the current directory. The -l option tells grep to only print the names of the files containing the match.
 ```
 
-## Usage
+## Usage 📖
 
 ```
 dodo "A verbal description of the command you'd like to run"
@@ -83,9 +83,9 @@ Replace your prompt with a natural language description of the task you want to 
 - -e, --execute: Execute the suggested command, the last one suggested if no prompt is provided.
 - -c, --continue: Refine the command using a conversational flow.
 
-## Examples
+## Examples 🧭
 
-### Example 1: Working with simple commands 
+### Example 1: 🐣 Working with simple commands 
 
 A simple use case is to write what you want to achive if you don't remember the command;
 Here for example is a way to ask to list all the directory in the current location.
@@ -119,7 +119,7 @@ This command lists all the hidden directories in the current working directory. 
    character. The / specifies that only directories should be matched. 
 ```
 
-### Example 2: More advanced examples
+### Example 2: 🐥 More advanced examples
 
 The AI service behind is really smart and is able to work with many different components,
 here is an example where it uses variable and math to address your request.
@@ -137,7 +137,7 @@ Explanation:
 - Finally, echo is used to print the random number to the terminal.
 ```
 
-### Example 3: Generate command for any popular tool
+### Example 3: 🛠️ Generate command for any popular tool
 
 The knowledge of the tools expands outside the core bash commands,
 and is able to generate complex commands from any popular command-line tool as well.
@@ -165,7 +165,7 @@ React. The install command is used to install a package, and react@latest specif
 want to install the latest version of the React package. 
 ```
 
-## Disclaimer
+## Disclaimer 🫢
 
 This tool relies on OpenAI's GPT-3.5 Turbo model to generate bash commands from natural language descriptions. Please consider the following points when using this tool:
 - The generated code might not always be accurate or run as intended. Always review the suggested commands before executing them, especially if they involve system-level operations or sensitive data.
@@ -175,8 +175,8 @@ This tool relies on OpenAI's GPT-3.5 Turbo model to generate bash commands from 
 - Always exercise caution and apply best practices when using generated commands in production or critical environments. Verify the functionality and security of the commands before deploying them.
 - By using this tool, you agree to these terms and acknowledge the risks associated with using the generated commands.
 
-## License
+## License 📄
 This project is licensed under the MIT License. See the LICENSE file for details.
 
-## Contributing
+## Contributing 🥰
 Contributions are welcome! Please feel free to submit a Pull Request or open an Issue to discuss any improvements or suggestions.
