@@ -43,14 +43,20 @@ export OPENAI_API_KEY=YOUR_OPENAI_API_KEY
 After adding the line, restart your terminal or run source ~/.bashrc (or your shell config file), depending on the file you edited. The environment variable will now be available each time you open a new terminal session.
 
 
-*Option 2:* Create a config.ini file in the project directory with the following content, replacing YOUR_OPENAI_API_KEY with your actual OpenAI API key:
+*Option 2:* Create a config.ini file in the project directory, you can clone the teplate curated for you: 
+
+```
+config_template.ini > config.ini
+```
+
+Open the config.ini file and search the line below; replace YOUR-OPENAI-KEY with your actual OpenAI API key:
 
 ```
 [openai]
-api_key = YOUR_OPENAI_API_KEY
+service_key = YOUR-OPENAI-KEY
 ```
 
-This works under Linux and Windows, adpat it if you use Windows or another OS.
+This works under Linux and MacOS, adpat it if you use Windows or another OS.
 
 4 - Create an alias for quick access
 
