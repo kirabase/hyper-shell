@@ -11,20 +11,37 @@ from rich.console import Console
 from rich.markdown import Markdown
 from rich.text import Text
 
-# Set up your OpenAI API key
-def get_openai_api_key()-> str:
+
+def load_config() -> dict:
+    config = ConfigParser()
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    config_path = os.path.join(script_dir, "config.ini")
+    config.read(config_path)
+
+    config_dict = {
+        "main": {
+            "ai_service": config.get("main", "ai_service", fallback="openai"),
+            "ai_personality": config.get("main", "ai_personality", fallback="none"),
+        },
+    }
+
+    for service in ["openai"]:
+        config_dict[service] = {
+            "service_key": config.get(service, "service_key", fallback=None),
+            "service_model": config.get(service, "service_model", fallback="gpt-3.5-turbo"),
+        }
+
+    return config_dict
+
+config = load_config()
+
+def get_api_key() -> str:
     # If not found in the configuration file, try to read it from the environment variable
     if "OPENAI_API_KEY" in os.environ:
         return os.environ["OPENAI_API_KEY"]
     
-    # Try to read the API key from the configuration file
-    config_file = "config.ini"
-    if os.path.exists(config_file):
-        config = ConfigParser()
-        config.read(config_file)
-
-        if config.has_option("openai", "api_key"):
-            return config.get("openai", "api_key")
+    if config["openai"]["service_key"]:
+        return config["openai"]["service_key"]
 
     # If not found in the environment variable, ask the user for the API key
     api_key = input("Please enter your OpenAI API key: ")
@@ -33,35 +50,20 @@ def get_openai_api_key()-> str:
     return api_key
 
 # Set up your OpenAI API key
-openai.api_key = "" or get_openai_api_key()
+openai.api_key = "" or get_api_key()
 
-# File to store the last command and explanation
+BASH_ROLE = f'''You are a helpful assistant that translates human language descriptions to bash commands. Make sure to follow these guidelines:
+- Provide a command and its explanation in every reply, both in markdown format
+- Long explanations are presented in a bullet points format.
+- If a request doesn't make sense, still suggest a command and include guidance on how to fix it in the explanation.
+- Be capable of understanding and responding in multiple languages. Whenever the language of a request changes, change the language of your reply accordingly.
 
+Examples:
+- Input: "List in a readable format all files in a directory"
+  Output: "Command: ```ls -lh```\nExplanation: This command lists all files and directories in the current directory."
 
-BASH_ROLE = '''You are a helpful assistant that translates human language descriptions to bash commands. If a request doesn't make sense, you still suggest a reasonable one. Your reply is formatted in markdown and structured this way:         
-[Example 1]
-Command: 
-```ls -lh```
-
-Explanation:
-This command will output a list of all the directories in the current directory, along with
-their sizes and other details. 
-
-The arguments used work this way:
-- The -l option tells ls to use the long listing format, which includes details such as file 
-permissions, ownership, and size. 
-- The -h option tells ls to display file sizes in a human-readable format, such as "10K" for 10 kilobytes, instead of in bytes.
-
-[Example 2]
-Command: 
-```ls -d */```
-
-Explanation: 
-The command lists all the directories in the current working directory.
-The arguments used work this way:
-- ls is the command to list directory contents.                                                                                  
-- d option is used to list only directories.                                                                                    
-- */ is a pattern that matches all directories in the current directory. The * is a wildcard that matches any character and the / specifies that only directories should be matched. 
+- Input: "Elenca in maniera leggibile tutti i file in una directory"
+  Output: "Comando: ```ls```\nSpiegazione: Questo comando elenca tutti i file e le directory nella directory corrente."
 '''
 
 LAST_CONVERSATION_FILE = os.path.join(os.path.expanduser("~"), ".dodo_last_conversation.json")
@@ -92,9 +94,9 @@ def get_generation_script(role: str, prompt: str, continue_mode: bool=False):
 def execute_script(script: List[dict]) -> str:
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model=config['openai']['service_model'],
             messages=script,
-            max_tokens=300,
+            max_tokens=500,
             temperature=0.5,
         )
     except openai.error.RateLimitError:
@@ -106,15 +108,16 @@ def execute_script(script: List[dict]) -> str:
 
 
 def parse_explanation(command_explanation) -> Tuple[str, str]:
-    ok_card = "Command:"
-    if ok_card in command_explanation:
-        bash_command, explanation = command_explanation.split(ok_card,1)[1].split("Explanation:",1)
-        bash_command = bash_command.replace("```","").strip()
-    else:
-        bash_command = None
-        explanation = command_explanation
+    pattern = r'(^|\n)\w+:'
+    sections = re.split(pattern, command_explanation)
+    sections = [s.strip() for s in sections if s.strip()]
+    if len(sections)!=2:
+        print(sections)
+        exit("Invalid reply")
+    bash_command = sections[0].replace('`',"").strip()
+    explanation = sections[1]
 
-    return bash_command, explanation.strip()
+    return bash_command, explanation
 
 def main():
     parser = ArgumentParser(description="Generate, refine or execute bash commands from a natural language description.")
@@ -141,9 +144,9 @@ def main():
     # Highlight the command
     console = Console()
     if bash_command:
-        command_text = Text(f"{bash_command}", style="bold green")
+        command_text = Text(f"{bash_command}", style="purple" if args.execute else "green")
     else:
-        command_text = Text(f"Unknown Command", style="bold red")
+        command_text = Text(f"Unknown Command", style="red")
     console.print(command_text)
     if not args.short:
         console.print(Markdown(explanation))
