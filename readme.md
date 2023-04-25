@@ -5,8 +5,9 @@ Dodo is a smart command-line tool that effortlessly generates and executes Bash 
 
 🌟 Features:
 - 💬 *Conversational UI*: Effortlessly generate complex commands from simple conversational requests, with multi-language support. 
-- 📚 *Clear Explanations*: Each command comes with a clear explanation, so you can validate the results and learn as you go. 
-- 🔄 *Refinement*: Feel like you're having a conversation with your terminal as you refine and tweak commands to perfection. 
+- ✅ *Transparent*: Each command comes with a clear explanation, enabling you to validate the results ensuring it matches your intentions.
+- 🎓 *Tutor*: Improve your command-line knowledge, with opportunities to explore in-depth learning and understand configurations.
+- 🔄 *Refinement*: Feel like you're having a conversation with your terminal as you refine and tweak commands to perfection.
 - 🛠️ *Support for Popular Tools*: Master complex commands for Git, Docker, Npm, and a wide range of popular command-line tools. 
 - 😄 *Fun & Engaging*: Transform your command line experience into a more interactive, enjoyable, and productive endeavor! 
 
