@@ -16,7 +16,7 @@ Dodo is a smart command-line tool that effortlessly generates and executes Bash 
 
 1 - Clone the repository, change to the project directory, and install the required dependencies: 
 ```
-git clone https://github.com/kirabasw/dodo-ai.git && \ 
+git clone https://github.com/kirabase/dodo-ai.git && \ 
 cd dodo-ai && \ 
 pip install -r requirements.txt
 ```
