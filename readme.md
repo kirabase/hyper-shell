@@ -1,7 +1,7 @@
-# Dodo 🦤 - Your Command Line AI Companion 🤖
-Dodo is a smart command-line tool that effortlessly generates and executes Bash commands for you, using natural language descriptions. It harnesses the power of OpenAI's GPT-3.5 to understand your requirements and provides you with the appropriate Bash command and explanation.
+# HyperShell 💬 - Your Command Line AI Companion 🤖
+HyperShell is a smart command-line tool that effortlessly generates and executes Bash commands for you, using natural language descriptions. It harnesses the power of OpenAI's GPT-3.5 to understand your requirements and provides you with the appropriate Bash command and explanation.
 
-![Dodo demo](assets/dodo-demo.gif)
+![HyperShell demo](assets/dodo-demo.gif)
 
 🌟 Features:
 - 💬 *Conversational UI*: Effortlessly generate complex commands from simple conversational requests, with multi-language support. 
@@ -16,8 +16,8 @@ Dodo is a smart command-line tool that effortlessly generates and executes Bash 
 
 1 - Clone the repository, change to the project directory, and install the required dependencies: 
 ```
-git clone https://github.com/kirabase/dodo-ai.git && \ 
-cd dodo-ai && \ 
+git clone https://github.com/kirabase/HyperShell.git && \ 
+cd hyper-shell && \ 
 pip install -r requirements.txt
 ```
 
@@ -25,14 +25,14 @@ Note: This installation guide assumes you're using macOS, Linux, or Windows with
 
 2 - Get your OpenAI API key:
 
-Dodo uses OpenAI to create its advanced behaviors, and it requires you to create an API key. To obtain an OpenAI API key, sign up for an account at [OpenAI](https://beta.openai.com/signup/) and navigate to the [API key](https://platform.openai.com/account/api-keys) section on your account page. 
+HyperShell uses OpenAI to create its advanced behaviors, and it requires you to create an API key. To obtain an OpenAI API key, sign up for an account at [OpenAI](https://beta.openai.com/signup/) and navigate to the [API key](https://platform.openai.com/account/api-keys) section on your account page. 
 
 OpenAI API Costs and Free Usage: When you register an account, OpenAI provides a free tier with limited usage, requiring a credit card for verification. After exhausting the free tier, you'll need to choose a paid plan.
-Dodo uses GPT3.5, which will cost you a few cents a day. Monitor your API usage to avoid unexpected charges. For detailed pricing information, visit the [OpenAI Pricing page](https://openai.com/pricing).
+HyperShell uses GPT3.5, which will cost you a few cents a day. Monitor your API usage to avoid unexpected charges. For detailed pricing information, visit the [OpenAI Pricing page](https://openai.com/pricing).
 
 3 - Set up your OpenAI API key: 
 
-If you want to try dodo just run it, the first time it will ask you for the key; if you don't want to do it at each session, dodo supports multiple ways to set the key:
+If you want to try HyperShell just run it, the first time it will ask you for the key; if you don't want to do it at each session, HyperShell supports multiple ways to set the key:
 
 *Option 1:* Set the OPENAI_API_KEY environment variable with your OpenAI API key:
 
@@ -62,16 +62,16 @@ This works under Linux and MacOS, adpat it if you use Windows or another OS.
 
 4 - Create an alias for quick access
 
-Dodo becomes even more useful when it's easily accessible right when you need to generate or launch a command. To make it more convenient to run, create an alias.
+HyperShell becomes even more useful when it's easily accessible right when you need to generate or launch a command. To make it more convenient to run, create an alias.
 
 To set up an alias, open your shell configuration file (.bashrc, .zshrc, or .bash_profile) and add the following line at the end, replacing /path/to/dodo-ai/dodo.py with the actual path to the project directory:
 
 ```
-alias dodo="python /path/to/dodo-ai/dodo.py"
+alias dodo="python /path/to/hyper-shell/dodo.py"
 ```
 
 After adding the alias, restart your terminal or run source ~/.bashrc (or the appropriate shell config file).
-Now you can use the dodo command directly:
+Now you can use the HyperShell command directly:
 ```
 $ dodo "List the names of files containing the words 'Artificial Intelligence'"
 
