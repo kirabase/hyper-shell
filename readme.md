@@ -16,7 +16,7 @@ HyperShell is a smart command-line tool that effortlessly generates and executes
 
 1 - Clone the repository, change to the project directory, and install the required dependencies: 
 ```
-git clone https://github.com/kirabase/HyperShell.git && \ 
+git clone https://github.com/kirabase/hyper-shell.git && \ 
 cd hyper-shell && \ 
 pip install -r requirements.txt
 ```
