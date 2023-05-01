@@ -1,4 +1,4 @@
-# HyperShell 💬 - Your Command Line AI Companion 🤖
+# HyperShell 🤖 - Your Command Line AI Companion
 HyperShell is a smart command-line tool that effortlessly generates and executes Bash commands for you, using natural language descriptions. It harnesses the power of OpenAI's GPT-3.5 to understand your requirements and provides you with the appropriate Bash command and explanation.
 
 ![HyperShell demo](assets/dodo-demo.gif)
@@ -16,7 +16,7 @@ HyperShell is a smart command-line tool that effortlessly generates and executes
 
 1 - Clone the repository, change to the project directory, and install the required dependencies: 
 ```
-git clone https://github.com/kirabase/HyperShell.git && \ 
+git clone https://github.com/kirabase/hyper-shell.git && \ 
 cd hyper-shell && \ 
 pip install -r requirements.txt
 ```
