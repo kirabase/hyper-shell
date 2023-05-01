@@ -1,19 +1,17 @@
 # HyperShell 🤖 - Your Command Line AI Companion
-HyperShell is a smart command-line tool that effortlessly generates and executes shell commands for you, using natural language descriptions. It harnesses the power of OpenAI's GPT-3.5 to understand your requirements and provides you with the appropriate Bash command and explanation.
+HyperShell is a smart command-line tool that effortlessly generates and executes shell commands for you, using natural language descriptions. It harnesses the power of OpenAI's GPT-3.5 to understand your requirements and provides you with the appropriate Shell command and explanation.
 
 ![HyperShell demo](assets/dodo-demo.gif)
 
-🌟 Features:
-- 💬 *Conversational UI*: Effortlessly generate complex commands from simple conversational requests, with multi-language support. 
-- 🔄 *Refinement*: Feel like you're having a conversation with your terminal as you refine and tweak commands to perfection. 
-- ✅ *Transparent*: Each command comes with a clear explanation, enabling you to validate the results ensuring it matches your intentions.
-- 🎓 *Tutoring*: Improve your command-line knowledge, with opportunities to explore in-depth learning and understand configurations.
-- 🛠️ *Support for Popular Tools*: Master complex commands for Git, Docker, Npm, and a wide range of popular command-line tools. 
-- 🌈 *Mutli-language*: Seamlessly switch between languages, making the command generation process an enjoyable multilingual experience.
-- 🌐 *Universal*: Effortlessly adapt commands for any OS (Linux, macOS, Windows, and more) and shell (Bash, PowerShell, and more).
-- 😄 *Fun & Engaging*: Transform your command line experience into a more interactive, enjoyable, and productive endeavor! 
+🌟 Features
 
-HyperShell also multiplatform: it translate and tune commands for any Operating System (Linux, macOS, Windows, ... etc) and any type of shell (Bash, Zsh, PowerShell, ... etc).
+| Intuitive | Knowledge Hub | 
+|----------|----------|
+| 💬 *Conversational UI*: Effortlessly generate complex commands from simple conversational requests, with multi-language support. | 🎓 *Tutoring*: Improve your command-line knowledge, with opportunities to explore in-depth learning and understand configurations. |
+| 🔄 *Refinement*: Feel like you're having a conversation with your terminal as you refine and tweak commands to perfection. | 🛠️ *Support for Popular Tools*: Master complex commands for Git, Docker, Npm, and a wide range of popular command-line tools. |
+| ✅ *Transparent*: Each command comes with a clear explanation, enabling you to validate the results ensuring it matches your intentions. | 🌐 *Universal*: Effortlessly adapt commands for any OS (Linux, macOS, Windows, and more) and shell (Bash, PowerShell, and more). |
+| 🌈 *Mutli-language*: Seamlessly switch between languages, making the command generation process an enjoyable multilingual experience. | 😄 *Fun & Engaging*: Transform your command line experience into a more interactive, enjoyable, and productive endeavor! | 
+
 
 ## Installation 📦
 
