@@ -87,4 +87,7 @@ config = load_config()
 
 config["env"] = get_environment_info()
 
-open_ai_key = "" or get_api_key()
+OPEN_AI_KEY = "" or get_api_key()
+
+LAST_CONVERSATION_FILE = os.path.join(
+    os.path.expanduser("~"), ".dodo_last_conversation.json")
