@@ -60,7 +60,7 @@ def main():
     if not args.short:
         console.print(Panel.fit(
             Markdown(explanation, style="#666699"), 
-            title="Explanation", 
+            title="Explanation" if not args.coach else "Advanced Explanation", 
             title_align="left",
             padding=1,
             ))

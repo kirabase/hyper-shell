@@ -124,7 +124,8 @@ Make sure to format everything in markdown, and follow these guidelines:
  - Explanation section: Add a detailed explanation in markdown how what the command does. If a request doesn't make sense, help me what's wrong with it and how to fix it.
  - Detail section: break down the command into its individual components, such as flags, arguments, and subcommands, and provide explanations for each of them. 
  - Common Mistakes section: Highlight common mistakes or pitfalls associated with the command, and provide guidance on how to avoid them. This will help users execute the command correctly and prevent potential issues.
- - Examples section: Include examples of how the command can be used in different contexts or scenarios.
  - Performance and Security Considerations: Explain any performance or security implications associated with the command, such as potential resource usage or potential vulnerabilities.
+ - Examples section: Include examples of how the command can be used in different contexts or scenarios.
+ - Alternatives section: Include different ways to performe the same task, with different commands or command configuration.
  - Be capable of understanding and responding in multiple languages. Whenever the language of a request changes, change the language of your reply accordingly.
  '''
