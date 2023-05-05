@@ -7,9 +7,10 @@ from typing import List, Tuple
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.text import Text
+from rich.padding import Padding
 
 from settings import config
-from roles import CompanionRole
+from roles import CompanionRole, HSInvalidRequest
 
 
 def main():
@@ -23,37 +24,46 @@ def main():
                         help="Execute the suggested command.")
     parser.add_argument("-c", "--continue", dest="refine", action="store_true",
                         help="Refine the command using the conversational feature of ChatGPT.")
+    parser.add_argument("-d", "--debug", action="store_true",
+                        help="Run hyper-shell in debug mode.")
 
+    # Get Ready with the arguments
     args = parser.parse_args()
     prompt = " ".join(args.prompt)
+    config['debug'] = args.debug
 
     if not prompt and not args.execute:
         sys.exit(
             'Provide a command description, i.e: "List all the folders in this location".')
 
-    # Generate the command
-    agent = CompanionRole()
-
-    # create the prompt
-    command_explanation = agent.execute(prompt, args.refine)
-    bash_command, explanation = agent.parse(command_explanation)
-
-    # Highlight the command
+    # Command line interface
     console = Console()
-    if bash_command:
-        command_text = Text(f"{bash_command}",
-                            style="purple" if args.execute else "green")
+    color_mode = "purple" if args.execute else "green"
+
+    # > Generate the command
+    with console.status(Text(" Generating Command ...", style=color_mode)) as status:
+        agent = CompanionRole()
+        command_explanation = agent.execute(prompt, args.refine)
+
+    try:
+        command, explanation = agent.parse(command_explanation)
+    except HSInvalidRequest as e:
+        console.print(Text("No suggestions:", style="bold red"), Text(str(e)))
+        sys.exit(1)
+    
+    # > Print formatted results
+    formatted_command = Text(command, style=("bold "+ color_mode))
+    if args.execute:
+        console.print(Text("Executing:"), formatted_command)    
     else:
-        command_text = Text(f"Unknown Command", style="red")
-    console.print(command_text)
+        console.print("Command:", formatted_command)
 
     if not args.short:
-        console.print(Markdown(explanation))
+        console.print(Padding(Markdown(explanation), 1, expand=False, style="#666699"))
 
     # Act upon the command
     if args.execute:
-        os.system(bash_command)
-
+        os.system(command)
 
 if __name__ == "__main__":
     main()

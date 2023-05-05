@@ -26,6 +26,8 @@ openai.api_key = OPEN_AI_KEY
 
 
 # a class that is confifured with an ai prompt and can generate text
+class HSInvalidRequest(Exception):
+    pass
 
 class Role:
 
@@ -75,24 +77,22 @@ class Role:
         return content
 
     def parse(self, command_explanation) -> Tuple[str, str]:
-
         # Structured mode
         sections = re.split(r'(^|\n)\w+:', command_explanation)
         sections = [s.strip() for s in sections if s.strip()]
 
         if len(sections) == 2:
             bash_command = sections[0].replace('`', "").strip()
-            explanation = sections[1]
+            explanation = sections[1].strip()
             return bash_command, explanation
 
         # Resilient mode
         match = re.search(r'`([^`]+)`', command_explanation)
         if match:
-            return match.group(1), command_explanation
+            return match.group(1), command_explanation.strip()
 
         # Skip mode
-        exit('AI is not the solution this time!')
-
+        raise HSInvalidRequest(command_explanation)
 
 class CompanionRole(Role):
 
