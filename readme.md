@@ -89,8 +89,9 @@ Replace your prompt with a natural language description of the task you want to 
 
 ### Command-line options
 - -s, --short: Show only the generated command, without the explanation.
-- -e, --execute: Execute the suggested command, the last one suggested if no prompt is provided.
-- -c, --continue: Refine the command using a conversational flow.
+- -c, --coach: Show a very detailed explanation to learn and master your commands.
+- -x, --execute: Execute the suggested command, the last one suggested if no prompt is provided.
+- -r, --refine: Refine the command using a conversational flow.
 
 ## Examples 🧭
 
