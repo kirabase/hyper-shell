@@ -1,14 +1,13 @@
 import json
 import os
 import re
-from typing import List, Tuple
 
 import openai
 
 from settings import config, OPEN_AI_KEY, LAST_CONVERSATION_FILE
 
 
-def save_last_conversation(conversation: List):
+def save_last_conversation(conversation: list):
     with open(LAST_CONVERSATION_FILE, "w") as f:
         json.dump(conversation, f)
 
@@ -31,15 +30,19 @@ class HSInvalidRequest(Exception):
 
 class Role:
 
+    PANEL_TITLE = ''
+
     ROLE_PROMPT = ''
 
     def __init__(self):
         self.system_prompt = self._compile_prompt()
+        self._gen_command = None
+        self._gen_explanations = []
 
     def _compile_prompt(self) -> str:
         return self.ROLE_PROMPT.format(config=config)
 
-    def _get_generation_script(self, prompt: str, continue_mode: bool = False) -> List:
+    def _get_generation_script(self, prompt: str, continue_mode: bool = False) -> list:
         conversation = []
 
         if continue_mode:
@@ -51,7 +54,7 @@ class Role:
 
         return conversation
 
-    def _execute_script(self, script: List, refine: bool = False) -> str:
+    def _execute_script(self, script: list, refine: bool = False) -> str:
         try:
             response = openai.ChatCompletion.create(
                 model=config['openai']['service_model'],
@@ -76,25 +79,38 @@ class Role:
             content = load_last_conversation()[-1]["content"]
         return content
 
-    def parse(self, command_explanation) -> Tuple[str, str]:
+    def parse(self, explanation: str):
         # Structured mode
-        sections = re.split(r'(^|\n)\w+:', command_explanation)
+        sections = re.split(r'(^|\n)\w+:', explanation)
         sections = [s.strip() for s in sections if s.strip()]
 
         if len(sections) == 2:
-            bash_command = sections[0].replace('`', "").strip()
-            explanation = sections[1].strip()
-            return bash_command, explanation
+            self._gen_command = sections[0].replace('`', "").strip()
+            self._gen_explanations = sections[1].strip()
+            return
 
         # Resilient mode
-        match = re.search(r'`([^`]+)`', command_explanation)
+        match = re.search(r'`([^`]+)`', explanation)
         if match:
-            return match.group(1), command_explanation.strip()
+            self._gen_command = match.group(1).strip()
+            self._gen_explanations = explanation.strip()
+            return
 
         # Skip mode
-        raise HSInvalidRequest(command_explanation)
+        raise HSInvalidRequest(explanation)
 
+    def get_command(self) -> str:
+        return self._gen_command
+    
+    def get_explanations(self) -> list[dict]:
+        #check if self._gen_explanations is a string
+        if isinstance(self._gen_explanations, str):
+            return [(self.PANEL_TITLE, self._gen_explanations)]
+        return self._gen_explanations
+    
 class CompanionRole(Role):
+
+    PANEL_TITLE = "Explanation"
 
     ROLE_PROMPT = \
 '''You are a helpful assistant that translates human language descriptions to {config[env][shell_type]} commands on {config[env][os_type]}. Make sure to follow these guidelines:
@@ -117,15 +133,46 @@ Output: "Comando: ```ls```\nSpiegazione: Questo comando elenca tutti i file e le
 '''
 
 class CoachRole(Role):
+    
+    PANEL_TITLE = "Advanced Explanation"
+    
+    SECTIONS = [
+        ["Explanation", "Add a detailed explanation in markdown how what the command does. If a request doesn't make sense, help me what's wrong with it and how to fix it."],
+        ["Detail", "Break down the command into its individual components, such as flags, arguments, and subcommands, and provide explanations for each of them."], 
+        ["Common Mistakes", "Highlight common mistakes or pitfalls associated with the command, and provide guidance on how to avoid them. This will help users execute the command correctly and prevent potential issues."],
+        ["Performance and Security", "Explain any performance or security implications associated with the command, such as potential resource usage or potential vulnerabilities."],
+        ["Examples", "Include examples of how the command can be used in different contexts or scenarios."],
+        #["Alternatives", "Include different ways to performe the same task, with different commands or command configuration."],
+        #["FAQs", "Include a list of frequently asked questions and answers that address common concerns, misconceptions, or challenges faced by new command line users."],
+    ]
 
     ROLE_PROMPT = \
 '''You are a helpful instructor that translates human language descriptions to {config[env][shell_type]} commands on {config[env][os_type]} and teach me how to use them in detail. 
-Make sure to format everything in markdown, and follow these guidelines:
- - Explanation section: Add a detailed explanation in markdown how what the command does. If a request doesn't make sense, help me what's wrong with it and how to fix it.
- - Detail section: break down the command into its individual components, such as flags, arguments, and subcommands, and provide explanations for each of them. 
- - Common Mistakes section: Highlight common mistakes or pitfalls associated with the command, and provide guidance on how to avoid them. This will help users execute the command correctly and prevent potential issues.
- - Performance and Security Considerations: Explain any performance or security implications associated with the command, such as potential resource usage or potential vulnerabilities.
- - Examples section: Include examples of how the command can be used in different contexts or scenarios.
- - Alternatives section: Include different ways to performe the same task, with different commands or command configuration.
- - Be capable of understanding and responding in multiple languages. Whenever the language of a request changes, change the language of your reply accordingly.
- '''
+about the output:
+- Format everything in markdown, each section starts with a title in h3 (###).
+- Be capable of understanding and responding in multiple languages. Whenever the language of a request changes, change the language of your reply accordingly.
+
+In your reply, make sure to include these sections with corresponding title:
+''' + '\n'.join([f' - {t}: {d}' for t,d in SECTIONS])      
+
+
+    def parse(self, explanation: str):
+        super().parse(explanation)
+        print(explanation)
+        
+        sections = []
+        explanations = [s for s in explanation.split('###') if s.strip()]
+        for e in explanations:
+            title, content = e.split('\n', 1)
+            sections.append((title.strip(), content))
+
+        self._gen_explanations = sections
+    
+    def get_explanations(self) -> list[dict]:
+        sections = super().get_explanations()
+        
+        explanations = ""
+        for title, content in sections:
+            explanations += f"\n\n{title.upper()}:\n\n{content.strip()}"
+        
+        return [(self.PANEL_TITLE, explanations)]

@@ -35,36 +35,38 @@ def main():
     if not prompt and not args.execute:
         sys.exit('Provide a command description, i.e: "List all the folders in this location".')
 
-    # Command line interface
     console = Console()
     color_mode = "purple" if args.execute else "green"
 
-    # > Generate the command
+    # Generate the command
     with console.status(Text(" Generating Command ...", style=color_mode)) as status:
         agent = CompanionRole() if not args.coach else CoachRole()
         command_explanation = agent.execute(prompt, args.refine)
 
+    # Parse the command
     try:
-        command, explanation = agent.parse(command_explanation)
+        agent.parse(command_explanation)
     except HSInvalidRequest as e:
         console.print(Text("No suggestions:", style="bold red"), Text(str(e)))
         sys.exit(1)
     
-    # > Print formatted results
+    # OUTPUT: Suggested Commands
+    command = agent.get_command()
     formatted_command = Text(f"{command}\n", style=("bold "+ color_mode))
     if args.execute:
         console.print(Text("Executing:"), formatted_command)    
     else:
         console.print("Command:", formatted_command)
 
+    # OUTPUT: Suggested Command Explanation
+    sections = agent.get_explanations()
+    
     if not args.short:
-        console.print(Panel.fit(
-            Markdown(explanation, style="#666699"), 
-            title="Explanation" if not args.coach else "Advanced Explanation", 
-            title_align="left",
-            padding=1,
-            ))
-    console.print()
+        for title, content in sections:
+            panel = Panel.fit(Markdown(content, style="#666699"), 
+                title=title, title_align="left",padding=1)
+            console.print(panel)
+        console.print("\n")
     
     # Act upon the command
     if args.execute:
