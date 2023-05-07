@@ -158,7 +158,6 @@ In your reply, make sure to include these sections with corresponding title:
 
     def parse(self, explanation: str):
         super().parse(explanation)
-        print(explanation)
         
         sections = []
         explanations = [s for s in explanation.split('###') if s.strip()]
