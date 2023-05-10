@@ -32,20 +32,24 @@ class Role:
 
     PANEL_TITLE = ''
 
-    ROLE_PROMPT = ''
+    ROLE_PROMPT = []
 
-    def __init__(self):
-        self.system_prompt = self._compile_prompt()
+    def __init__(self, refine: bool = False):
+        self.refine = refine
+        self.system_prompt = self._compile_prompt()[0]
         self._gen_command = None
         self._gen_explanations = []
 
-    def _compile_prompt(self) -> str:
-        return self.ROLE_PROMPT.format(config=config)
+    def _compile_prompt(self) -> list[str]:
+        return [p.format(config=config) for p in self.ROLE_PROMPT]
 
-    def _get_generation_script(self, prompt: str, continue_mode: bool = False) -> list:
+    def _get_max_tokens(self) -> int:
+        return 500
+
+    def _get_generation_script(self, prompt: str) -> list:
         conversation = []
 
-        if continue_mode:
+        if self.refine:
             conversation = load_last_conversation()
         else:
             conversation = [{"role": "system", "content": self.system_prompt}]
@@ -54,12 +58,12 @@ class Role:
 
         return conversation
 
-    def _execute_script(self, script: list, refine: bool = False) -> str:
+    def _execute_script(self, script: list) -> str:
         try:
             response = openai.ChatCompletion.create(
                 model=config['openai']['service_model'],
                 messages=script,
-                max_tokens=500,
+                max_tokens=self._get_max_tokens(),
                 temperature=0.5,
             )
         except openai.error.RateLimitError:
@@ -69,17 +73,8 @@ class Role:
         script.append({"role": "assistant", "content": response_text})
 
         return response_text
-
-    def execute(self, prompt: str, refine: bool = False) -> str:
-        if prompt:
-            script = self._get_generation_script(prompt, refine)
-            content = self._execute_script(script, refine)
-            save_last_conversation(script)
-        else:
-            content = load_last_conversation()[-1]["content"]
-        return content
-
-    def parse(self, explanation: str):
+    
+    def _parse(self, explanation: str):
         # Structured mode
         sections = re.split(r'(^|\n)\w+:', explanation)
         sections = [s.strip() for s in sections if s.strip()]
@@ -97,7 +92,17 @@ class Role:
             return
 
         # Skip mode
-        raise HSInvalidRequest(explanation)
+        raise HSInvalidRequest(explanation)    
+
+    def execute(self, prompt: str):
+        if prompt:
+            script = self._get_generation_script(prompt)
+            content = self._execute_script(script)
+            save_last_conversation(script)
+        else:
+            content = load_last_conversation()[-1]["content"]
+        
+        self._parse(content)
 
     def get_command(self) -> str:
         return self._gen_command
@@ -112,8 +117,10 @@ class CompanionRole(Role):
 
     PANEL_TITLE = "Explanation"
 
-    ROLE_PROMPT = \
-'''You are a helpful assistant that translates human language descriptions to {config[env][shell_type]} commands on {config[env][os_type]}. Make sure to follow these guidelines:
+    ROLE_PROMPT = [
+    
+    # System prompt
+    '''You are a helpful assistant that translates human language descriptions to {config[env][shell_type]} commands on {config[env][os_type]}. Make sure to follow these guidelines:
  - Add an explanations in markdown to your commands: start with a generic description of the command, and add detalis in a bullet list if needed.
  - If a request doesn't make sense, still suggest a command and include guidance on how to fix it in the explanation.
  - Be capable of understanding and responding in multiple languages. Whenever the language of a request changes, change the language of your reply accordingly.
@@ -130,34 +137,45 @@ Output: "Command: ```ls -lh``\nExplanation: This command list all the files and 
 
 Input: "Elenca in maniera leggibile tutti i file in questa directory"
 Output: "Comando: ```ls```\nSpiegazione: Questo comando elenca tutti i file e le directory nella directory corrente."
-'''
+''']
+
+    def _get_max_tokens(self) -> int:
+        return 250
 
 class CoachRole(Role):
     
     PANEL_TITLE = "Advanced Explanation"
-    
-    SECTIONS = [
-        ["Explanation", "Add a detailed explanation in markdown how what the command does. If a request doesn't make sense, help me what's wrong with it and how to fix it."],
-        ["Detail", "Break down the command into its individual components, such as flags, arguments, and subcommands, and provide explanations for each of them."], 
-        ["Common Mistakes", "Highlight common mistakes or pitfalls associated with the command, and provide guidance on how to avoid them. This will help users execute the command correctly and prevent potential issues."],
-        ["Performance and Security", "Explain any performance or security implications associated with the command, such as potential resource usage or potential vulnerabilities."],
-        ["Examples", "Include examples of how the command can be used in different contexts or scenarios."],
-        #["Alternatives", "Include different ways to performe the same task, with different commands or command configuration."],
-        #["FAQs", "Include a list of frequently asked questions and answers that address common concerns, misconceptions, or challenges faced by new command line users."],
-    ]
 
-    ROLE_PROMPT = \
-'''You are a helpful instructor that translates human language descriptions to {config[env][shell_type]} commands on {config[env][os_type]} and teach me how to use them in detail. 
+    ROLE_PROMPT =[
+    
+    # System prompt
+    '''You are a helpful instructor that translates human language descriptions to {config[env][shell_type]} commands on {config[env][os_type]} and teach me how to use them in detail. 
 about the output:
-- Format everything in markdown, each section starts with a title in h3 (###).
-- Be capable of understanding and responding in multiple languages. Whenever the language of a request changes, change the language of your reply accordingly.
+ - Format everything in markdown, each section starts with a title in h3 (###).
+ - Be capable of understanding and responding in multiple languages. Whenever the language of a request changes, change the language of your reply accordingly.
 
 In your reply, make sure to include these sections with corresponding title:
-''' + '\n'.join([f' - {t}: {d}' for t,d in SECTIONS])      
+ - Explanation: Add a detailed explanation in markdown how what the command does. If a request doesn't make sense, help me what's wrong with it and how to fix it.
+ - Detail: Break down the command into its individual components, such as flags, arguments, and subcommands, and provide explanations for each of them.
+ - Common Mistakes: Highlight common mistakes or pitfalls associated with the command, and provide guidance on how to avoid them. This will help users execute the command correctly and prevent potential issues.
+ - Examples: Include examples of how the command can be used in different contexts or scenarios. 
+''',
+
+    # Follow up prompt
+    '''Ok! now write these sections:
+ - Performance and Security", "Explain any performance or security implications associated with the command, such as potential resource usage or potential vulnerabilities.
+ - Alternatives: Include different ways to performe the same task, with different commands or command configuration.
+ - FAQs: Include a list of frequently asked questions and answers that address common concerns, misconceptions, or challenges faced by new command line users.
+'''
+]
 
 
-    def parse(self, explanation: str):
-        super().parse(explanation)
+    def _get_max_tokens(self) -> int:
+        return 400
+
+
+    def _parse(self, explanation: str):
+        super()._parse(explanation)
         
         sections = []
         explanations = [s for s in explanation.split('###') if s.strip()]
@@ -166,12 +184,13 @@ In your reply, make sure to include these sections with corresponding title:
             sections.append((title.strip(), content))
 
         self._gen_explanations = sections
-    
+
+
     def get_explanations(self) -> list[dict]:
         sections = super().get_explanations()
-        
         explanations = ""
         for title, content in sections:
             explanations += f"\n\n{title.upper()}:\n\n{content.strip()}"
         
         return [(self.PANEL_TITLE, explanations)]
+    
