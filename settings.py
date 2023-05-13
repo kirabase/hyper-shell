@@ -1,4 +1,3 @@
-
 import sys
 import os
 import platform
@@ -6,7 +5,7 @@ import platform
 from configparser import ConfigParser
 
 # Install the distro package with `pip install distro` if you're using Linux
-if sys.platform.startswith('linux'):
+if sys.platform.startswith("linux"):
     import distro
 
 
@@ -26,25 +25,27 @@ def load_config() -> dict:
     for service in ["openai"]:
         config_dict[service] = {
             "service_key": config.get(service, "service_key", fallback=None),
-            "service_model": config.get(service, "service_model", fallback="gpt-3.5-turbo"),
+            "service_model": config.get(
+                service, "service_model", fallback="gpt-3.5-turbo"
+            ),
         }
 
     return config_dict
 
 
 def get_environment_info():
-    shell_type = 'Unknown'
-    if sys.platform == 'win32':
-        if 'powershell' in sys.executable.lower():
-            shell_type = 'PowerShell'
+    shell_type = "Unknown"
+    if sys.platform == "win32":
+        if "powershell" in sys.executable.lower():
+            shell_type = "PowerShell"
         else:
-            shell_type = 'CMD'
-    elif sys.platform.startswith('linux') or sys.platform == 'darwin':
-        shell = os.environ.get('SHELL', 'Unknown')
-        if 'zsh' in shell.lower():
-            shell_type = 'Zsh'
-        elif 'bash' in shell.lower():
-            shell_type = 'Bash'
+            shell_type = "CMD"
+    elif sys.platform.startswith("linux") or sys.platform == "darwin":
+        shell = os.environ.get("SHELL", "Unknown")
+        if "zsh" in shell.lower():
+            shell_type = "Zsh"
+        elif "bash" in shell.lower():
+            shell_type = "Bash"
 
     os_type = platform.system()
     if os_type == "Darwin":
@@ -52,8 +53,7 @@ def get_environment_info():
     os_name = platform.release()
 
     if os_type == "Linux":
-        os_name_version = distro.linux_distribution(
-            full_distribution_name=False)
+        os_name_version = distro.linux_distribution(full_distribution_name=False)
     elif os_type == "Windows":
         os_name_version = (os_name, platform.win32_ver()[1])
     elif os_type == "Darwin":
@@ -62,9 +62,9 @@ def get_environment_info():
         os_name_version = (os_name, "Unknown")
 
     return {
-        'shell_type': shell_type,
-        'os_type': os_type,
-        'os_name_version': os_name_version
+        "shell_type": shell_type,
+        "os_type": os_type,
+        "os_name_version": os_name_version,
     }
 
 
@@ -90,4 +90,5 @@ config["env"] = get_environment_info()
 OPEN_AI_KEY = "" or get_api_key()
 
 LAST_CONVERSATION_FILE = os.path.join(
-    os.path.expanduser("~"), ".dodo_last_conversation.json")
+    os.path.expanduser("~"), ".dodo_last_conversation.json"
+)
