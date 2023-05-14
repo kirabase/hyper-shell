@@ -12,7 +12,6 @@ HyperShell is a smart command-line tool that effortlessly generates and executes
 | ✅ *Transparent*: Each command comes with a clear explanation, enabling you to validate the results ensuring it matches your intentions. | 🌐 *Universal*: Effortlessly adapt commands for any OS (Linux, macOS, Windows, and more) and shell (Bash, PowerShell, and more). |
 | 🌈 *Mutli-language*: Seamlessly switch between languages, making the command generation process an enjoyable multilingual experience. | 😄 *Fun & Engaging*: Transform your command line experience into a more interactive, enjoyable, and productive endeavor! | 
 
-
 ## Installation 📦
 
 1 - Clone the repository, change to the project directory, and install the required dependencies: 
@@ -175,6 +174,18 @@ React. The install command is used to install a package, and react@latest specif
 want to install the latest version of the React package. 
 ```
 
+## The Roadmap head 🌈
+
+We are committed to bringing monthly updates to HyperShell to explore the possibilities of AI-powered tools further. In our roadmap, we have several exciting features planned, including:
+
+- **Support for Multiple LLMS**: We are working on expanding HyperShell's compatibility to include other popular Language Models like Bard and Cloude, offering you a wider range of options for generating commands.
+
+- **Troubleshooting Mode**: We understand the frustration of encountering terminal errors and issues. That's why we are developing a dedicated troubleshooting mode to assist you in resolving problems faster and with more accuracy, providing step-by-step guidance.
+
+- **Academy Mode**: We believe in continuous learning, and we're doubling down on it. The upcoming Academy mode will provide a comprehensive learning experience, with tutorials, exercises, and real-world examples to help you master the command-line and enhance your technical skills.
+
+We're excited to evolve and improve HyperShell to meet your needs and make your command-line experience even more powerful and enjoyable.
+
 ## Disclaimer 🫢
 
 This tool relies on OpenAI's GPT-3.5 Turbo model to generate bash commands from natural language descriptions. Please consider the following points when using this tool:
@@ -190,3 +201,39 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ## Contributing 🥰
 Contributions are welcome! Please feel free to submit a Pull Request or open an Issue to discuss any improvements or suggestions.
+
+---
+
+## Frequently Asked Questions 👨‍🏫
+
+#### Q: 1. How does HyperShell work?
+
+HyperShell utilizes OpenAI's GPT-3.5, with knowledge up until mid-2021, to understand natural language descriptions and generate shell commands. It supports tools and configurations built until that time, making it highly likely to be compatible.
+
+#### Q: 3. Can HyperShell work with different operating systems and shells?
+
+Yes, HyperShell understands the context and generates commands tailored to the specific shell and operating system. It adapts the commands to work seamlessly with different shells and OS environments.
+
+#### Q: 4. How can HyperShell improve my command-line knowledge?
+
+HyperShell is designed for continuous learning. It provides straightforward explanations with each command. Additionally, you can activate the "--coach mode" to ask for detailed tips and in-depth explanations, enhancing your understanding of command-line operations.
+
+#### Q: 5. Is HyperShell able to refine and tweak commands?
+
+Absolutely! HyperShell offers the "--refine mode," enabling you to iterate and modify commands through a conversational approach. You can refine and tweak commands until they meet your specific requirements.
+
+#### Q: 6. Can HyperShell generate commands in multiple languages?
+
+Yes, HyperShell supports multiple languages. You can seamlessly switch between languages during the command generation process, making it a multilingual and enjoyable experience.
+
+#### Q: 7. Can I use HyperShell for very complex commands or command configurations?
+
+Certainly! HyperShell is capable of generating commands and command configurations that range from simple to highly complex. It can handle intricate tasks and provide detailed command solutions.
+
+#### Q: 8. Is HyperShell a free tool?
+
+HyperShell itself is free to use. However, you will incur charges for the OpenAI API calls for GPT-3.5 Turbo, which powers HyperShell. For moderate usage, the cost can be as low as a couple of dollars per month.
+
+
+
+
