@@ -96,6 +96,7 @@ class Role:
 
     def execute(self, prompt: str):
         if prompt:
+            prompt = "The command:\n" + prompt.strip()
             script = self._get_generation_script(prompt)
             content = self._execute_script(script)
             save_last_conversation(script)
@@ -120,7 +121,7 @@ class CompanionRole(Role):
     ROLE_PROMPT = [
         # System prompt
         """You are a helpful assistant that translates human language descriptions to {config[env][shell_type]} commands on {config[env][os_type]}. Make sure to follow these guidelines:
- - Add an explanations in markdown to your commands: start with a generic description of the command, and add detalis in a bullet list if needed.
+ - Add explanations in markdown to your commands: start with a generic description of the command, and add details in a bullet list if needed.
  - If a request doesn't make sense, still suggest a command and include guidance on how to fix it in the explanation.
  - Be capable of understanding and responding in multiple languages. Whenever the language of a request changes, change the language of your reply accordingly.
 
@@ -135,12 +136,11 @@ Input: "list all files here in a readable way"
 Output: "Command: ```ls -lh``\nExplanation: This command list all the files and directories in the current directory making the output more readable and informative.\n - ls is the command to list files and directories in the current directory.\n - The option -l (lowercase L) enables long format, which displays additional information such as file permissions, owner, size, and modification date.\n - The option -h (human-readable) makes the file sizes easier to read by displaying them in a format that uses units such as KB, MB, and GB."
 
 Input: "Elenca in maniera leggibile tutti i file in questa directory"
-Output: "Comando: ```ls```\nSpiegazione: Questo comando elenca tutti i file e le directory nella directory corrente."
-"""
+Output: "Comando: ```ls```\nSpiegazione: Questo comando elenca tutti i file e le directory nella directory corrente." """
     ]
 
     def _get_max_tokens(self) -> int:
-        return 250
+        return 500
 
 
 class CoachRole(Role):
@@ -168,7 +168,7 @@ In your reply, make sure to include these sections with corresponding title:
     ]
 
     def _get_max_tokens(self) -> int:
-        return 400
+        return 500
 
     def _parse(self, explanation: str):
         super()._parse(explanation)
