@@ -95,8 +95,8 @@ class Role:
         raise HSInvalidRequest(explanation)
 
     def execute(self, prompt: str):
+        prompt = prompt.strip()
         if prompt:
-            prompt = "The command:\n" + prompt.strip()
             script = self._get_generation_script(prompt)
             content = self._execute_script(script)
             save_last_conversation(script)
@@ -141,6 +141,12 @@ Output: "Comando: ```ls```\nSpiegazione: Questo comando elenca tutti i file e le
 
     def _get_max_tokens(self) -> int:
         return 500
+
+    def execute(self, prompt: str):
+        prompt = prompt.strip()
+        if prompt:
+            prompt = "The command: " + prompt
+        super().execute(prompt)
 
 
 class CoachRole(Role):
