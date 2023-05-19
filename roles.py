@@ -1,27 +1,7 @@
-import json
-import os
 import re
 
-import openai
-
-from settings import config, OPEN_AI_KEY, LAST_CONVERSATION_FILE
-
-
-def save_last_conversation(conversation: list):
-    with open(LAST_CONVERSATION_FILE, "w") as f:
-        json.dump(conversation, f)
-
-
-def load_last_conversation():
-    if os.path.exists(LAST_CONVERSATION_FILE):
-        with open(LAST_CONVERSATION_FILE, "r") as f:
-            return json.load(f)
-    else:
-        return []
-
-
-# Set up your OpenAI API key
-openai.api_key = OPEN_AI_KEY
+from settings import config
+from brain import get_engine
 
 
 # a class that is confifured with an ai prompt and can generate text
@@ -35,8 +15,9 @@ class Role:
     ROLE_PROMPT = []
 
     def __init__(self, refine: bool = False):
+        Engine = get_engine(config["main"]["ai_service"])
+        self.ai_engine = Engine(self._compile_prompt()[0])
         self.refine = refine
-        self.system_prompt = self._compile_prompt()[0]
         self._gen_command = None
         self._gen_explanations = []
 
@@ -45,34 +26,6 @@ class Role:
 
     def _get_max_tokens(self) -> int:
         return 500
-
-    def _get_generation_script(self, prompt: str) -> list:
-        conversation = []
-
-        if self.refine:
-            conversation = load_last_conversation()
-        else:
-            conversation = [{"role": "system", "content": self.system_prompt}]
-
-        conversation.append({"role": "user", "content": prompt})
-
-        return conversation
-
-    def _execute_script(self, script: list) -> str:
-        try:
-            response = openai.ChatCompletion.create(
-                model=config["openai"]["service_model"],
-                messages=script,
-                max_tokens=self._get_max_tokens(),
-                temperature=0.5,
-            )
-        except openai.error.RateLimitError:
-            response_text = "Open AI service overloaded, try in a few minutes"
-        else:
-            response_text = response.choices[0].message["content"].strip()
-        script.append({"role": "assistant", "content": response_text})
-
-        return response_text
 
     def _parse(self, explanation: str):
         # Structured mode
@@ -95,13 +48,12 @@ class Role:
         raise HSInvalidRequest(explanation)
 
     def execute(self, prompt: str):
+        ai = self.ai_engine
         prompt = prompt.strip()
         if prompt:
-            script = self._get_generation_script(prompt)
-            content = self._execute_script(script)
-            save_last_conversation(script)
+            content = ai.execute(prompt, self.refine, self._get_max_tokens())
         else:
-            content = load_last_conversation()[-1]["content"]
+            content = ai.get_last_execution()
 
         self._parse(content)
 
@@ -134,9 +86,7 @@ Output: "Command: ```grep -r "ciao" .```\nExplanation: grep is a command that se
 
 Input: "list all files here in a readable way" 
 Output: "Command: ```ls -lh``\nExplanation: This command list all the files and directories in the current directory making the output more readable and informative.\n - ls is the command to list files and directories in the current directory.\n - The option -l (lowercase L) enables long format, which displays additional information such as file permissions, owner, size, and modification date.\n - The option -h (human-readable) makes the file sizes easier to read by displaying them in a format that uses units such as KB, MB, and GB."
-
-Input: "Elenca in maniera leggibile tutti i file in questa directory"
-Output: "Comando: ```ls```\nSpiegazione: Questo comando elenca tutti i file e le directory nella directory corrente." """
+"""
     ]
 
     def _get_max_tokens(self) -> int:

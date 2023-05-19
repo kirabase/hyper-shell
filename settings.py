@@ -8,6 +8,13 @@ from configparser import ConfigParser
 if sys.platform.startswith("linux"):
     import distro
 
+AI_SERVICES = [
+    ("openai", "gpt-3.5-turbo"),
+    ("anthropic", "claude-v1"),
+]
+
+DEFAULT_AI_SERVICE = AI_SERVICES[0][0]
+
 
 def load_config() -> dict:
     config = ConfigParser()
@@ -17,20 +24,25 @@ def load_config() -> dict:
 
     config_dict = {
         "main": {
-            "ai_service": config.get("main", "ai_service", fallback="openai"),
-            "ai_personality": config.get("main", "ai_personality", fallback="none"),
+            "ai_service": config.get(
+                "main", "ai_service", fallback=DEFAULT_AI_SERVICE
+            ).lower(),
         },
     }
 
-    for service in ["openai"]:
+    for service, model in AI_SERVICES:
         config_dict[service] = {
             "service_key": config.get(service, "service_key", fallback=None),
-            "service_model": config.get(
-                service, "service_model", fallback="gpt-3.5-turbo"
-            ),
+            "service_model": config.get(service, "service_model", fallback=model),
         }
 
     return config_dict
+
+
+def instrument_config(config):
+    config["env"] = get_environment_info()
+    for service, model in AI_SERVICES:
+        config[service]["service_key"] = get_api_key(service)
 
 
 def get_environment_info():
@@ -68,26 +80,27 @@ def get_environment_info():
     }
 
 
-def get_api_key() -> str:
-    # If not found in the configuration file, try to read it from the environment variable
-    if "OPENAI_API_KEY" in os.environ:
-        return os.environ["OPENAI_API_KEY"]
+def get_api_key(ai_service) -> str:
+    # Check for an environment variable first
+    key_tag = f"{ai_service.upper()}_API_KEY"
+    if key_tag in os.environ:
+        return os.environ[key_tag]
 
-    if config["openai"]["service_key"]:
-        return config["openai"]["service_key"]
+    # Check for a config file
+    if config[ai_service]["service_key"]:
+        return config[ai_service]["service_key"]
 
-    # If not found in the environment variable, ask the user for the API key
-    api_key = input("Please enter your OpenAI API key: ")
-    os.environ["OPENAI_API_KEY"] = api_key
+    # Ask the user for the key
+    if config["main"]["ai_service"] == ai_service:
+        api_key = input(f"Please enter your {ai_service} API key: ")
+        os.environ[key_tag] = api_key
+        return api_key
 
-    return api_key
+    return None
 
 
 config = load_config()
-
-config["env"] = get_environment_info()
-
-OPEN_AI_KEY = "" or get_api_key()
+instrument_config(config)
 
 LAST_CONVERSATION_FILE = os.path.join(
     os.path.expanduser("~"), ".dodo_last_conversation.json"
