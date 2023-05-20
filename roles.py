@@ -33,19 +33,24 @@ class Role:
         sections = [s.strip() for s in sections if s.strip()]
 
         if len(sections) == 2:
-            self._gen_command = sections[0].replace("`", "").strip()
-            self._gen_explanations = sections[1].strip()
-            return
+            self._gen_command = sections[0]
+            self._gen_explanations = sections[1]
 
         # Resilient mode
-        match = re.search(r"`([^`]+)`", explanation)
-        if match:
-            self._gen_command = match.group(1).strip()
-            self._gen_explanations = explanation.strip()
-            return
+        if not self._gen_command:
+            match = re.search(r"`([^`]+)`", explanation)
+            if match:
+                self._gen_command = match.group(1)
+                self._gen_explanations = explanation
 
         # Skip mode
-        raise HSInvalidRequest(explanation)
+        if not self._gen_command:
+            raise HSInvalidRequest(explanation)
+
+        self._gen_command = (
+            self._gen_command.replace("`", "").replace("Command:", "").strip()
+        )
+        self._gen_explanations = self._gen_explanations.strip()
 
     def execute(self, prompt: str):
         ai = self.ai_engine
