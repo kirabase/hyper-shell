@@ -96,9 +96,17 @@ def main():
     parser.add_argument(
         "-x", "--execute", action="store_true", help="Execute the suggested command."
     )
+    parser.add_argument(
+        "-m",
+        "--model",
+        action="store",
+        help="Force the use of a different AI model for the command.",
+    )
 
     # Get Ready with the arguments
     args = parser.parse_args()
+    if args.model:
+        config["main"]["ai_service"] = args.model
 
     if args.coach:
         mode = Mode.COACH
