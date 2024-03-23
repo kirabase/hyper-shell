@@ -73,10 +73,8 @@ class OpenAIEngine(AIEngine):
 
     def __init__(self, system_prompt: str):
         super().__init__(system_prompt)
-        import openai
-
-        self.engine = openai
-        self.engine.api_key = config["openai"]["service_key"]
+        from openai import OpenAI
+        self.engine = OpenAI(api_key = config["openai"]["service_key"])
 
     def _generate_service_script(self, script: list) -> object:
         service_script = []
@@ -93,16 +91,17 @@ class OpenAIEngine(AIEngine):
 
     def _call_service(self, service_script: object, max_token: int) -> str:
         try:
-            response = self.engine.ChatCompletion.create(
+            response = self.engine.chat.completions.create(
                 model=config["openai"]["service_model"],
                 messages=service_script,
                 max_tokens=max_token,
                 temperature=0.5,
             )
-        except self.engine.error.RateLimitError:
-            response_text = "Open AI service overloaded, try in a few minutes"
+        except Exception as e:
+            print(f"Error occurred: {str(e)}")
+            raise Exception(f"Error occurred: {str(e)}")
         else:
-            response_text = response.choices[0].message["content"].strip()
+            response_text = response.choices[0].message.content.strip()
 
         return response_text
 
